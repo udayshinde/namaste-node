@@ -4,12 +4,15 @@
   "description": "its about learning MEAN",
   "main": "index.js",
   "scripts": {
-    "start" : "node src/app.js",
-    "dev" : "nodemon src/app.js"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
   "author": "Udaysinh Shinde",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2"
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "mongoose": "^8.13.1",
+    "validator": "^13.15.0"
   }
 }
