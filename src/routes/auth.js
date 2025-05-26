@@ -11,15 +11,25 @@ authRouter.post('/signup', async (req, res) => {
         //validation of data
         validateSignUpData(req);
         //schema level validation
-        const { password, ...rest } = req.body;
+        const { firstName, lastName, emailId, password } = req.body;
 
         const passwordHash = await bcrypt.hash(password, 10);
         const user = new User({
-            ...rest,
+            firstName,
+            lastName,
+            emailId,
             password: passwordHash
         });
 
-        await user.save();
+        const savedUser = await user.save();
+
+        //CREATE JWT TOKEN
+        const token = await savedUser.getJWT();
+
+        //CREATE COOKIE WITH THE TOKEN
+        res.cookie("token", token, {
+            expires: new Date(Date.now() + 60 * 60 * 1000)
+        });
         res.status(200).send({
             "success": true, "message": "Data saved successfuly", data: {
                 user
@@ -37,7 +47,7 @@ authRouter.post('/login', async (req, res) => {
         const { emailId, password } = req.body;
         const user = await User.findOne({ emailId: emailId });
         if (!user) {
-            throw new Error("Email ID is not present in DB");
+            res.status(401).json({ "success": false, "message": "Please Login!" });
         }
         const isPasswordValid = await user.validatePassword(password)
 
@@ -50,9 +60,9 @@ authRouter.post('/login', async (req, res) => {
             res.cookie("token", token, {
                 expires: new Date(Date.now() + 60 * 60 * 1000)
             });
-            res.status(200).send({ status: true, message: "Login Successful!" });
+            res.status(200).send({ status: true, message: "Login Successful!", user: user });
         } else {
-            res.status(400).send({ status: false, message: "Login Failed!" });
+            res.status(400).send({ status: false, message: "ERROR! Invalid Credentials!" });
         }
     } catch (err) {
         console.log(err);

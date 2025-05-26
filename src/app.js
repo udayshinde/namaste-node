@@ -1,9 +1,16 @@
 const express = require('express');
-const connectDB = require('./config/database.js');
 const app = express();
+const connectDB = require('./config/database.js');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+
+app.use(cors({
+    origin: 'http://localhost:4200',
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
+
 
 app.use((req, res, next) => {
     console.log('Requested path:', req.path);
@@ -13,11 +20,13 @@ app.use((req, res, next) => {
 const authRouter = require('./routes/auth.js');
 const requestRouter = require('./routes/request.js');
 const profileRouter = require('./routes/profile.js');
+const userRouter = require('./routes/user.js');
 
 
 app.use('/', authRouter);
 app.use('/request', requestRouter);
 app.use('/profile', profileRouter);
+app.use('/user', userRouter)
 // Force creation of indexes based on schema
 // User.syncIndexes()
 //     .then(() => console.log('Indexes synced'))
