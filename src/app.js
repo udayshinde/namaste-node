@@ -23,10 +23,10 @@ const profileRouter = require('./routes/profile.js');
 const userRouter = require('./routes/user.js');
 
 
-app.use('/', authRouter);
-app.use('/request', requestRouter);
-app.use('/profile', profileRouter);
-app.use('/user', userRouter);
+app.use('/api/', authRouter);
+app.use('/api/request', requestRouter);
+app.use('/api/profile', profileRouter);
+app.use('/api/user', userRouter);
 
 
 app.all('*', (req, res, next) => {

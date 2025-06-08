@@ -1,30 +1,20 @@
-# Stage 1: Build Angular App
-FROM node:20-alpine as build
+# Use an official Node.js runtime as the base image
+FROM node:20-alpine
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm install
 
-# Copy the rest of the code and build the Angular app
+# Install dependencies
+RUN npm install --production
+
+# Copy the rest of your app's source code
 COPY . .
-RUN npm run build --configuration production
 
-# Stage 2: Serve with Nginx
-FROM nginx:alpine
+# Expose the port your app runs on (e.g., 7777)
+EXPOSE 7777
 
-# Remove default nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy built Angular app to nginx public folder
-COPY --from=build /app/dist/devtinder /usr/share/nginx/html
-
-# Copy custom nginx config (optional, skip if not using)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Command to start your app
+CMD ["node", "server.js"]
