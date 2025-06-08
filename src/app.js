@@ -26,7 +26,15 @@ const userRouter = require('./routes/user.js');
 app.use('/', authRouter);
 app.use('/request', requestRouter);
 app.use('/profile', profileRouter);
-app.use('/user', userRouter)
+app.use('/user', userRouter);
+
+
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: `Cannot find ${req.originalUrl} on this server`
+    })
+});
 // Force creation of indexes based on schema
 // User.syncIndexes()
 //     .then(() => console.log('Indexes synced'))
