@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 7777
 
 # Command to start your app
-CMD ["node", "server.js"]
+CMD ["node", "app.js"]
