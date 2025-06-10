@@ -4,10 +4,17 @@ const connectDB = require('./config/database.js');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
+const allowOrigins = [
+    'https://dev-tinder.info',
+    'https://www.dev-tinder.info',
+    'https://api.dev-tinder.info'
+];
+
 app.use(cors({
-    origin: 'http://13.202.65.198',
+    origin: allowOrigins,
     credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
