@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const URL = "mongodb+srv://uday2good:Qw3wmyT5WxOb7Lt9@namastenode.tg7ra.mongodb.net/devTinder";
+require('dotenv').config();
+
+const URL = process.env.MONGODB_URL || 'mongodb://localhost:27017/devTinder';
 
 const connectDB = async () => {
     await mongoose.connect(URL);

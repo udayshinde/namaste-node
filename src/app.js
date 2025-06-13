@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const allowOrigins = [
+    'http://localhost:4200',
     'https://dev-tinder.info',
     'https://www.dev-tinder.info',
     'https://api.dev-tinder.info'
@@ -54,8 +55,8 @@ app.all('*', (req, res, next) => {
 connectDB()
     .then(() => {
         console.log("database connection established...");
-        app.listen(7777, () => {
-            console.log("Server is successfuly running on port 7777");
+        app.listen(process.env.PORT || 7777, () => {
+            console.log(`Server is successfuly running on port ${process.env.PORT || 7777}`);
         })
     }).catch((err) => {
         console.log("Database cannot be connected");
