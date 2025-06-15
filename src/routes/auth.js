@@ -11,9 +11,9 @@ authRouter.post('/signup', async (req, res) => {
         //validation of data
         validateSignUpData(req);
         //schema level validation
-        const { firstName, lastName, emailId, password } = req.body;
+        const { firstName, lastName, emailId, password: plainPassword } = req.body;
 
-        const passwordHash = await bcrypt.hash(password, 10);
+        const passwordHash = await bcrypt.hash(plainPassword, 10);
         const user = new User({
             firstName,
             lastName,
@@ -30,9 +30,11 @@ authRouter.post('/signup', async (req, res) => {
         res.cookie("token", token, {
             expires: new Date(Date.now() + 60 * 60 * 1000)
         });
+        let { password: _, ...userWirhtoutPassword } = savedUser._doc;
         res.status(200).send({
             "success": true, "message": "Data saved successfuly", data: {
-                user
+                user: userWirhtoutPassword,
+                token: token
             }
         });
     } catch (err) {
@@ -47,7 +49,7 @@ authRouter.post('/login', async (req, res) => {
         const { emailId, password } = req.body;
         const user = await User.findOne({ emailId: emailId });
         if (!user) {
-            res.status(401).json({ "success": false, "message": "Please Login!" });
+            return res.status(401).json({ "success": false, "message": "Please Login!" });
         }
         const isPasswordValid = await user.validatePassword(password)
 
@@ -60,9 +62,18 @@ authRouter.post('/login', async (req, res) => {
             res.cookie("token", token, {
                 expires: new Date(Date.now() + 60 * 60 * 1000)
             });
-            res.status(200).send({ status: true, message: "Login Successful!", user: user });
+            const { password, ...userWirhtoutPassword } = user._doc;
+            res.status(200).send({
+                status: true,
+                message: "Login Successful!",
+                user: userWirhtoutPassword,
+                token: token
+            });
         } else {
-            res.status(400).send({ status: false, message: "ERROR! Invalid Credentials!" });
+            res.status(400).send({
+                status: false,
+                message: "ERROR! Invalid Credentials!"
+            });
         }
     } catch (err) {
         console.log(err);

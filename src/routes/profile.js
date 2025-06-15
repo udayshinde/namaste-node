@@ -11,7 +11,7 @@ profileRouter.get('/view', userAuth, async (req, res) => {
         if (!validateProfileEditData(req)) {
             throw new Error("Invalid Edit Request!");
         }
-        const loggedInUser = req.user;
+        const { password, ...loggedInUser } = req.user._doc;
         res.status(200).json({
             message: `${loggedInUser.firstName}, this is your info`,
             data: loggedInUser
