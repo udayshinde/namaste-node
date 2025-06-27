@@ -8,7 +8,7 @@ const cors = require('cors');
 
 const allowOrigins = [
     'http://localhost:4200',
-    'http://15.206.165.173',
+    'http://13.233.237.187',
     'https://dev-tinder.info',
     'https://www.dev-tinder.info',
     'https://api.dev-tinder.info'
